@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#762B3A">
+<meta name="description" content="中文輸入能力練習：即時比對、自由跳題、文字進度與限時練習。">
+<title>Chinese Typing Practice V1.2</title>
+<style>
+:root{--wine:#762B3A;--blue:#2563eb;--bg:#f4f6fa;--ink:#203047;--muted:#64748b;--line:#dfe5ed;--green:#167a4a;--red:#b42f42;--amber:#a16a09}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif}
+header{background:white;border-bottom:1px solid var(--line);padding:20px max(20px,calc((100vw - 1010px)/2))}h1{color:var(--wine);font-size:clamp(22px,3vw,28px);margin:0}header p{margin:5px 0 0;color:var(--muted);font-size:13px}
+main{max-width:1050px;margin:24px auto;padding:0 16px 30px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:clamp(17px,3vw,27px);margin-bottom:16px;box-shadow:0 8px 30px #10213b06}h2{margin:0 0 10px;font-size:clamp(21px,3vw,28px)}h3{margin:0;font-size:18px}p{line-height:1.7}.muted{color:var(--muted)}.small{font-size:13px}
+.button{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;min-height:44px;background:var(--blue);color:white;border:1px solid transparent;border-radius:11px;font:700 15px system-ui;cursor:pointer;touch-action:manipulation}.button:hover:not(:disabled){filter:brightness(.94)}.button.secondary{background:#edf2f8;color:#34465f}.button.outline{background:white;color:#31537d;border-color:#d8e2ee}.button:disabled{opacity:.45;cursor:not-allowed}
+.callout{background:#f8f1f3;border-left:3px solid var(--wine);color:#68424b;border-radius:8px;padding:12px 16px;font-size:13px;margin:16px 0}.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}.feature{background:#f7f9fc;border-radius:12px;padding:16px;font-size:13px}.feature strong{display:block;font-size:15px;margin:7px 0 5px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.pill{font-size:12px;font-weight:750;border-radius:30px;padding:7px 11px;background:#f1f4f9;color:#586a82}.progress{height:9px;border-radius:20px;background:#e8edf3;overflow:hidden;margin:15px 0}.progress>div{height:100%;background:linear-gradient(90deg,#762B3A,#af6678);transition:width .2s}
+.numbers{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px}.number{font:750 15px system-ui;border-radius:10px;border:1px solid var(--line);background:#f8fafc;color:#65748a;min-height:44px;cursor:pointer}.number.done{background:#e5f6ed;color:var(--green);border-color:#b3ddc4}.number.partial{background:#fff3d8;color:var(--amber);border-color:#efd69d}.number.current{outline:2px solid var(--blue);outline-offset:2px}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:14px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#cbd5e1;margin-right:5px}.dot.good{background:#24a468}.dot.partial{background:#d9a245}
+.question{background:#faf4f6;border:1px solid #e8d8dd;border-radius:16px;padding:23px 11px;text-align:center;margin:17px 0 20px}.question small{color:#866774;display:block;margin:0 0 12px}.question canvas{max-width:100%;display:block;margin:auto;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}.question .hint{margin:12px 0 0;color:#8e7280;font-size:12px}
+label{font-weight:750}textarea{display:block;width:100%;min-height:112px;padding:15px;border:2px solid #dbe3ed;border-radius:12px;resize:vertical;background:white;color:var(--ink);font:20px/1.7 inherit;font-size:20px;line-height:1.7;margin-top:8px}textarea:focus{outline:none;border-color:#5790ee;box-shadow:0 0 0 3px #5790ee15}
+.feedback{margin-top:15px;background:#f8fafc;border:1px solid #e1e7ef;border-radius:13px;padding:15px}.feedback p{color:#53657c;font-size:13px;margin:8px 0}.tag{display:inline-block;border-radius:50px;font-size:12px;font-weight:750;padding:5px 10px;background:#edf2f7;color:#607085}.tag.done{background:#e5f6ed;color:var(--green)}.tag.partial{background:#fff3d8;color:var(--amber)}.badges{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.badge{font-size:12px;font-weight:750;background:#edf2f7;padding:7px 10px;border-radius:8px}.badge.good{background:#e5f6ed;color:var(--green)}.badge.bad{background:#fff0f1;color:var(--red)}.badge.wait{background:#fff3d8;color:var(--amber)}
+.typed{border-top:1px solid var(--line);padding-top:11px;margin-top:11px;line-height:2;overflow-wrap:anywhere;white-space:pre-wrap;font-size:18px;min-height:43px}.typed span{border-radius:3px}.typed .ok{background:#e5f6ed;color:var(--green)}.typed .wrong,.typed .extra{background:#ffdde2;color:var(--red);box-shadow:inset 0 -2px #c85d69}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:17px}.actions>div{display:flex;gap:9px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.stat{background:#f4f7fa;text-align:center;padding:17px 6px;border-radius:12px}.stat strong{font-size:28px;color:var(--wine);display:block;font-variant-numeric:tabular-nums}.stat small{color:var(--muted)}.review{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:15px 0}.review button{background:white;border:1px solid var(--line);border-radius:11px;padding:14px;text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}.review button:hover{background:#f7faff;border-color:#9dc0eb}.review small{display:block;color:var(--muted);margin-top:4px}.end-buttons{display:flex;gap:10px;flex-wrap:wrap}
+.time-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0 18px}.time-choice{cursor:pointer;position:relative}.time-choice input{position:absolute;opacity:0;inset:0}.time-choice span{display:block;background:#f7f9fc;border:2px solid var(--line);border-radius:11px;padding:13px 8px;text-align:center;font-weight:750;font-size:14px}.time-choice input:checked+span{border-color:var(--wine);background:#faf0f3;color:var(--wine)}.time-choice input:focus-visible+span{outline:3px solid #7ea8fb;outline-offset:2px}
+.resume-banner{padding:14px 16px;background:#eef6ff;border:1px solid #bdd5f2;border-radius:12px;margin:16px 0}.resume-banner p{margin:6px 0 10px;color:#365477;font-size:13px}.resume-banner .row{justify-content:flex-start}.clock.warning{background:#fff0c7;color:#9e6200}.clock.danger{background:#ffe0e4;color:#b3283d}
+.progress-detail{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:13px 0 6px;color:var(--muted);font-size:13px}.coverage-progress{height:7px;background:#edf1f7;border-radius:20px;overflow:hidden}.coverage-progress>div{height:100%;background:#3c83d5;transition:width .2s}
+.success-message{display:none;background:#e4f7eb;border:1px solid #b2e3c5;color:#167a4a;border-radius:12px;padding:13px 15px;margin-top:14px;font-weight:700}.success-message.visible{display:block;animation:pop .42s ease-out}@keyframes pop{0%{opacity:.3;transform:scale(.98)}70%{transform:scale(1.015)}100%{opacity:1;transform:scale(1)}}
+.summary-coverage{padding:17px;background:#f7f9fc;border-radius:13px;margin:12px 0 19px}.summary-coverage .row{margin-bottom:8px}.summary-coverage strong{color:var(--blue);font-size:23px}.result-notice{background:#fff5dc;border:1px solid #f0dba7;padding:13px 15px;border-radius:12px;font-size:13px;margin:14px 0}.result-notice.final{background:#e8f4fa;border-color:#c0d9ee}.readonly{opacity:.88}.end-buttons{align-items:center}.button.danger-outline{color:#9d3345;border-color:#e8c4cd;background:white}.button.danger-outline:hover:not(:disabled){background:#fff4f5}
+[hidden]{display:none!important}@media(max-width:650px){.feature-grid{grid-template-columns:1fr}.numbers{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.review{grid-template-columns:1fr}.actions>div{width:100%}.actions button{flex:1}}@media(max-width:400px){main{padding:0 10px;margin:14px auto}.card{padding:16px;border-radius:14px}textarea{font-size:18px}.question{padding:15px 7px}.end-buttons button{flex:1}}
+@media(max-width:600px){.time-choices{grid-template-columns:repeat(2,1fr)}}@media(prefers-reduced-motion:reduce){.success-message.visible{animation:none}.progress>div,.coverage-progress>div{transition:none}}
+</style>
+</head>
+<body>
+<header><h1>Chinese Typing Practice</h1><p>中文輸入能力挑戰 · 詩篇 121 · V1.2</p></header>
+<main>
+<section id="intro" class="card">
+ <span class="pill">📖 八句中文輸入練習</span>
+ <h2 style="margin-top:16px">用你熟悉的方法，輸入中文字。</h2>
+ <p class="muted">你可以用電腦中文輸入法、手機、Google Docs、Email 或其他中文輸入工具。重點是把指定中文字準確輸入電腦，而不是使用哪一種輸入法。</p>
+ <div class="feature-grid"><div class="feature">✨<strong>精準即時核對</strong>辨認錯字、漏字、多字與尚未輸入內容。</div><div class="feature">↔️<strong>自由跳題</strong>未完成也可以下一句，返回時答案會保留。</div><div class="feature">📈<strong>看見進步</strong>記錄完整句數、文字正確進度與練習時間。</div></div>
+ <div class="callout">課堂規則：不可以直接複製題目或搜尋現成答案。題目使用 Canvas 顯示，阻止一般文字選取；這不能防止所有截圖或進階擷取方式。</div>
+ <div id="restoreBanner" class="resume-banner" hidden><strong>↩ 找到上次未完成的練習</strong><p id="restoreDescription">可以繼續練習，或開始全新的一次。</p><div class="row"><button class="button" id="restoreBtn">繼續上次練習</button><button class="button secondary" id="discardBtn">放棄並開始新練習</button></div></div>
+ <div id="timeSettings"><h3 style="margin-top:17px">選擇練習時間</h3><div class="time-choices" role="radiogroup" aria-label="練習時間"><label class="time-choice"><input type="radio" name="duration" value="0" checked><span>不限時間</span></label><label class="time-choice"><input type="radio" name="duration" value="300"><span>5 分鐘</span></label><label class="time-choice"><input type="radio" name="duration" value="600"><span>10 分鐘</span></label><label class="time-choice"><input type="radio" name="duration" value="900"><span>15 分鐘</span></label></div></div>
+ <button class="button" id="start">開始練習 →</button>
+</section>
+
+<section id="practice" hidden>
+ <div class="card">
+  <div class="row"><div><h3>練習進度</h3><span class="muted small" id="progressText">已完成 0 / 8 句</span></div><div class="row"><span class="pill clock" id="clock" role="timer">⏱ 已用 00:00</span><button class="button outline" style="min-height:36px;padding:7px 11px;font-size:13px" id="summaryTop">查看進度</button></div></div>
+  <div class="progress"><div id="progressBar" style="width:0"></div></div>
+  <div class="progress-detail"><span>文字正確進度</span><strong id="coverageText">0%</strong></div><div class="coverage-progress" aria-label="文字正確進度"><div id="coverageBar" style="width:0"></div></div>
+  <nav id="numbers" class="numbers" aria-label="選擇題目"></nav>
+  <div class="legend"><span><i class="dot good"></i>已完成</span><span><i class="dot partial"></i>未完成</span><span><i class="dot"></i>未開始</span></div>
+ </div>
+ <div class="card">
+  <div class="row"><h3 id="questionTitle">第 1 / 8 句</h3><span class="tag" id="state">未開始</span></div>
+  <div class="question"><small>請參照以下文字輸入</small><canvas id="target" role="img" aria-label="題目以不可直接選取的圖像顯示"></canvas><p class="hint">綠色／底線＝正確　紅色＝錯字　黃色＝漏字　灰色＝尚未輸入</p></div>
+  <label for="answer">你的答案</label><textarea id="answer" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="在這裏打字，或貼上你自行輸入的中文字……"></textarea>
+  <p class="muted small" id="readonlyNote" hidden>這次練習已經結束，現在只可查看答案，不能修改。</p>
+  <div class="success-message" id="celebration" role="status">✓ 這一句完成了！你仔細核對了所有文字和標點。</div>
+  <div class="feedback"><div class="row"><strong>即時核對</strong><span class="tag" id="liveState">等待輸入</span></div><p id="feedbackText" aria-live="polite">開始輸入後，系統會自動核對。</p><div class="badges"><span class="badge good" id="correctCount">正確 0</span><span class="badge bad" id="errorCount">不一致 0</span><span class="badge wait" id="pendingCount">尚欠 0</span></div><div class="muted small">你已輸入的文字（顏色標示）</div><div class="typed" id="typed"></div></div>
+  <div class="actions"><div><button class="button secondary" id="prev">← 上一句</button><button class="button outline" id="clear">清除本句</button></div><div><button class="button" id="next">下一句 →</button></div></div>
+ </div>
+</section>
+
+<section id="summary" class="card" hidden>
+ <span class="pill">🎯 練習結果</span><h2 style="margin-top:14px">中文輸入練習總結</h2><p class="muted" id="summaryLead">不需要全部完成才可以結束。點擊任何句子，即可返回繼續修改。</p>
+ <div class="stats"><div class="stat"><strong id="doneStat">0</strong><small>已完成</small></div><div class="stat"><strong id="partialStat">0</strong><small>未完成</small></div><div class="stat"><strong id="emptyStat">8</strong><small>未開始</small></div><div class="stat"><strong id="timeStat">00:00</strong><small>練習時間</small></div></div>
+ <div class="summary-coverage"><div class="row"><span>文字正確進度</span><strong id="coverageStat">0%</strong></div><div class="coverage-progress"><div id="summaryCoverageBar" style="width:0"></div></div><p class="muted small" style="margin-bottom:0">這代表已正確對應的目標文字比例；多打字時即使進度達 100%，該句仍不算完整正確。</p></div>
+ <h3>各句進度</h3><div id="review" class="review"></div><div class="end-buttons"><button class="button" id="resume">返回繼續練習</button><button class="button secondary" id="restart">重新開始</button></div>
+ <div id="resultNotice" class="result-notice">尚未正式交卷。若選擇限時模式，查看進度時倒數仍會繼續。</div>
+ <div class="end-buttons"><button class="button danger-outline" id="submitFinal">結束練習並交卷</button></div>
+ <p class="muted small">此為 V1.2 前端測試版，尚未連接 Google Sheets。進行中的資料暫存於同一分頁；正式交卷或關閉分頁後不會作永久記錄。</p>
+</section>
+</main>
+<script>
+'use strict';
+const QUESTIONS=[
+ '我要向山舉目；我的幫助從何而來？',
+ '我的幫助從造天地的耶和華而來。',
+ '他必不叫你的腳搖動；保護你的必不打盹！',
+ '保護以色列的，也不打盹也不睡覺。',
+ '保護你的是耶和華；耶和華在你右邊蔭庇你。',
+ '白日，太陽必不傷你；夜間，月亮必不害你。',
+ '耶和華要保護你，免受一切的災害；他要保護你的性命。',
+ '你出你入，耶和華要保護你，從今時直到永遠。'
+];
+const el=id=>document.getElementById(id);
+const drafts=QUESTIONS.map(()=>({answer:''}));
+const SESSION_KEY='ctp.ps121.v1.2.active';
+const QUESTION_SIGNATURE=QUESTIONS.join('\u241e');
+const GRAPHEME_SEGMENTER=typeof Intl!=='undefined'&&Intl.Segmenter?new Intl.Segmenter('zh-Hant',{granularity:'grapheme'}):null;
+const chars=text=>GRAPHEME_SEGMENTER?Array.from(GRAPHEME_SEGMENTER.segment(text),x=>x.segment):Array.from(text);
+let index=0, composing=false, debounce=0, ticker=0, session=null, pendingSession=null;
+const wasComplete=Array(QUESTIONS.length).fill(false);
+
+// Minimum-edit-distance alignment from the beginning prevents a missing
+// character from incorrectly marking every later character as wrong.
+function compare(expected,received){
+ const a=chars(expected.normalize('NFC')),b=chars(received.normalize('NFC').trim());
+ const m=a.length,n=b.length,d=Array.from({length:m+1},()=>Array(n+1).fill(0));
+ for(let i=m;i>=0;i--)for(let j=n;j>=0;j--){
+  if(i===m)d[i][j]=n-j;
+  else if(j===n)d[i][j]=m-i;
+  else d[i][j]=Math.min(d[i+1][j]+1,d[i][j+1]+1,d[i+1][j+1]+(a[i]===b[j]?0:1));
+ }
+ const targetStatus=Array(m).fill('pending'),typedStatus=Array(n).fill('extra');
+ let i=0,j=0,good=0,wrong=0,missing=0,extra=0,pending=0;
+ while(i<m||j<n){
+  if(i<m&&j<n&&a[i]===b[j]&&d[i][j]===d[i+1][j+1]){targetStatus[i]='ok';typedStatus[j]='ok';good++;i++;j++;}
+  // Prefer an obvious nearby re-alignment before treating it as substitution.
+  else if(i+1<m&&j<n&&a[i+1]===b[j]&&d[i][j]===d[i+1][j]+1){targetStatus[i]='missing';missing++;i++;}
+  else if(i<m&&j+1<n&&a[i]===b[j+1]&&d[i][j]===d[i][j+1]+1){typedStatus[j]='extra';extra++;j++;}
+  else if(i<m&&j<n&&d[i][j]===d[i+1][j+1]+1){targetStatus[i]='wrong';typedStatus[j]='wrong';wrong++;i++;j++;}
+  else if(i<m&&(j===n||d[i][j]===d[i+1][j]+1)){targetStatus[i]=j===n?'pending':'missing';if(j===n)pending++;else missing++;i++;}
+  else if(j<n){typedStatus[j]='extra';extra++;j++;}
+ }
+ return {a,b,targetStatus,typedStatus,good,wrong,missing,extra,pending,complete:good===m&&m===n,started:received.trim().length>0};
+}
+function stateAt(i){if(!drafts[i].answer.trim())return 'empty';return compare(QUESTIONS[i],drafts[i].answer).complete?'done':'partial';}
+function counts(){let done=0,partial=0,empty=0;drafts.forEach((_,i)=>{const s=stateAt(i);if(s==='done')done++;else if(s==='partial')partial++;else empty++;});return {done,partial,empty};}
+function correctCoverage(){
+ let matched=0,total=0;
+ QUESTIONS.forEach((q,i)=>{const r=compare(q,drafts[i].answer);matched+=r.good;total+=r.a.length;});
+ return total?Math.round(matched/total*100):0;
+}
+function duration(){return session?Math.max(0,(session.endedAt||Date.now())-session.startedAt):0;}
+function timeText(ms){const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function screen(s){['intro','practice','summary'].forEach(id=>el(id).hidden=id!==s);}
+function saveSession(){
+ try{
+  if(!session||session.state!=='active'){sessionStorage.removeItem(SESSION_KEY);return;}
+  const snapshot={version:'1.2',signature:QUESTION_SIGNATURE,startedAt:session.startedAt,limitSeconds:session.limitSeconds,index,answers:drafts.map(d=>d.answer)};
+  sessionStorage.setItem(SESSION_KEY,JSON.stringify(snapshot));
+ }catch(err){/* Private browsing or storage disabled: in-memory practice still works. */}
+}
+function clearSaved(){try{sessionStorage.removeItem(SESSION_KEY);}catch(err){}}
+function getSaved(){
+ try{
+  const raw=sessionStorage.getItem(SESSION_KEY);if(!raw)return null;
+  const v=JSON.parse(raw),age=Date.now()-v.startedAt;
+  if(v.version!=='1.2'||v.signature!==QUESTION_SIGNATURE||!Array.isArray(v.answers)||v.answers.length!==QUESTIONS.length||v.answers.some(x=>typeof x!=='string'||x.length>3000)||![0,300,600,900].includes(v.limitSeconds)||!Number.isInteger(v.index)||v.index<0||v.index>=QUESTIONS.length||!Number.isFinite(age)||age<0||age>24*3600*1000){clearSaved();return null;}
+  return v;
+ }catch(err){clearSaved();return null;}
+}
+function showRestore(){pendingSession=getSaved();el('restoreBanner').hidden=!pendingSession;el('restoreDescription').textContent=pendingSession&&pendingSession.limitSeconds&&Date.now()-pendingSession.startedAt>=pendingSession.limitSeconds*1000?'這次限時練習已到期，可以恢復查看當時結果。':'可以繼續未完成的練習，或開始全新的一次。';}
+function start(){
+ clearInterval(ticker);clearTimeout(debounce);
+ const limitSeconds=Number(document.querySelector('input[name="duration"]:checked').value);
+ drafts.forEach(d=>d.answer='');wasComplete.fill(false);index=0;
+ session={state:'active',startedAt:Date.now(),limitSeconds,endedAt:null};
+ el('restoreBanner').hidden=true;saveSession();screen('practice');startTicker();render();
+}
+function restore(){
+ if(!pendingSession)return;
+ drafts.forEach((d,i)=>d.answer=pendingSession.answers[i]);index=pendingSession.index;wasComplete.fill(false);
+ session={state:'active',startedAt:pendingSession.startedAt,limitSeconds:pendingSession.limitSeconds,endedAt:null};
+ el('restoreBanner').hidden=true;pendingSession=null;screen('practice');startTicker();
+ if(!checkExpiry())render();
+}
+function persist(){
+ if(!session||session.state!=='active'||el('practice').hidden)return;
+ if(checkExpiry())return;
+ drafts[index].answer=el('answer').value;saveSession();
+}
+function isFinal(){return Boolean(session&&session.state!=='active');}
+function go(i){
+ if(i<0||i>=QUESTIONS.length)return;
+ if(session&&session.state==='active'&&checkExpiry())return;
+ persist();index=i;saveSession();screen('practice');render();
+}
+function updateClock(){
+ if(!session)return;
+ const timed=session.limitSeconds>0,left=timed?Math.max(0,session.limitSeconds*1000-duration()):0;
+ el('clock').textContent=timed?'⏳ 剩餘 '+timeText(left):'⏱ 已用 '+timeText(duration());
+ el('clock').className='pill clock '+(timed&&left<=15000?'danger':timed&&left<=60000?'warning':'');
+ if(!el('summary').hidden)el('timeStat').textContent=timeText(duration());
+}
+function startTicker(){clearInterval(ticker);ticker=setInterval(()=>{if(!checkExpiry())updateClock();},250);updateClock();}
+function checkExpiry(){
+ if(!session||session.state!=='active'||!session.limitSeconds||duration()<session.limitSeconds*1000)return false;
+ session.endedAt=session.startedAt+session.limitSeconds*1000;session.state='expired';clearSaved();
+ clearInterval(ticker);showSummary();return true;
+}
+function renderNav(){
+ const nav=el('numbers');nav.replaceChildren();drafts.forEach((_,i)=>{
+  const b=document.createElement('button'),s=stateAt(i);b.type='button';b.textContent=i+1;b.className='number '+s+(i===index?' current':'');
+  b.setAttribute('aria-label',`第${i+1}句：${s==='done'?'已完成':s==='partial'?'未完成':'未開始'}`);
+  if(i===index)b.setAttribute('aria-current','step');b.addEventListener('click',()=>go(i));nav.append(b);
+ });
+ const s=counts(),coverage=correctCoverage();
+ el('progressText').textContent=`已完成 ${s.done} / 8 句`;
+ el('progressBar').style.width=(s.done/8*100)+'%';
+ el('coverageText').textContent=coverage+'%';
+ el('coverageBar').style.width=coverage+'%';
+}
+function drawTarget(r){
+ const c=el('target'),ctx=c.getContext('2d');if(!ctx)return;
+ const w=Math.max(220,Math.floor(c.parentElement.clientWidth-28)),size=w<380?20:w<650?24:28,lineH=size*1.8,margin=11;
+ const font=`650 ${size}px 'PingFang TC','Microsoft JhengHei',sans-serif`;
+ const meas=document.createElement('canvas').getContext('2d');meas.font=font;
+ let current=[],width=0;const lines=[];
+ r.a.forEach((ch,i)=>{const cw=meas.measureText(ch).width;if(current.length&&width+cw>w-margin*2){lines.push({items:current,width});current=[];width=0;}current.push({ch,i,cw});width+=cw;});
+ if(current.length)lines.push({items:current,width});
+ const h=Math.max(70,lines.length*lineH+18),ratio=Math.min(3,window.devicePixelRatio||1);
+ c.style.width=w+'px';c.style.height=h+'px';c.width=Math.round(w*ratio);c.height=Math.round(h*ratio);
+ ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,w,h);ctx.font=font;ctx.textBaseline='middle';
+ lines.forEach((line,k)=>{let x=(w-line.width)/2,y=9+(k+.5)*lineH;line.items.forEach(item=>{
+  const s=r.targetStatus[item.i];
+  if(s==='wrong'||s==='missing'){ctx.fillStyle=s==='wrong'?'#ffdfe3':'#fff0c5';ctx.fillRect(x-1,y-size*.65,item.cw+2,size*1.3);}
+  ctx.fillStyle=s==='ok'?'#167a4a':s==='wrong'?'#b42f42':s==='missing'?'#a16a09':r.started?'#94a3b8':'#762B3A';
+  ctx.fillText(item.ch,x,y);
+  if(s==='ok'){ctx.fillRect(x,y+size*.7,item.cw,2);}
+  x+=item.cw;
+ });});
+}
+function updateFeedback(){
+ const r=compare(QUESTIONS[index],drafts[index].answer),s=stateAt(index);
+ const celebration=el('celebration');
+ if(r.complete){
+  if(!wasComplete[index]){
+   celebration.classList.remove('visible');void celebration.offsetWidth;
+   celebration.textContent=['✓ 這一句完成了！你有仔細核對每個字。','✓ 完全正確！你的耐心讓這句文字更準確。','✓ 做得好！你成功處理了這句的所有標點。'][index%3];
+   celebration.classList.add('visible');
+  }else if(!celebration.classList.contains('visible')){celebration.classList.add('visible');}
+ }else celebration.classList.remove('visible');
+ wasComplete[index]=r.complete;
+ el('state').textContent=s==='done'?'✓ 已完成':s==='partial'?'● 未完成':'○ 未開始';el('state').className='tag '+s;
+ el('liveState').textContent=r.complete?'全部正確':!r.started?'等待輸入':r.wrong+r.missing+r.extra?'請核對':'繼續輸入';el('liveState').className='tag '+(r.complete?'done':r.started?'partial':'');
+ let msg='尚未輸入。你可以開始打字，也可以先做下一句。';
+ if(r.complete)msg='很好！整句的中文字及標點全部正確。';
+ else if(r.started){const parts=[];if(r.good)parts.push(`正確 ${r.good} 字元`);if(r.wrong)parts.push(`不一致 ${r.wrong} 字元`);if(r.missing)parts.push(`中間漏了 ${r.missing} 字元`);if(r.extra)parts.push(`多了 ${r.extra} 字元`);if(r.pending)parts.push(`後面仍有 ${r.pending} 字元未輸入`);msg=parts.join('；')+'。請參照上方彩色題目核對，或先跳至其他句子。';}
+ el('feedbackText').textContent=msg;el('correctCount').textContent=`正確 ${r.good}`;el('errorCount').textContent=`不一致 ${r.wrong+r.missing+r.extra}`;el('pendingCount').textContent=`尚欠 ${r.pending}`;
+ const t=el('typed');t.replaceChildren();if(!r.b.length){t.textContent='尚未輸入文字';t.style.color='#94a3b8';}else{t.style.color='';r.b.forEach((ch,i)=>{const span=document.createElement('span');span.textContent=ch;span.className=r.typedStatus[i];t.append(span);});}
+ drawTarget(r);
+}
+function render(){
+ el('answer').value=drafts[index].answer;
+ el('answer').disabled=isFinal();el('clear').disabled=isFinal();el('readonlyNote').hidden=!isFinal();
+ el('questionTitle').textContent=`第 ${index+1} / 8 句`;
+ el('prev').disabled=index===0;
+ el('next').textContent=index===7?'查看總結 →':'下一句 →';
+ el('summaryTop').textContent=isFinal()?'查看結果':'查看進度';
+ updateClock();renderNav();updateFeedback();
+}
+function schedule(){clearTimeout(debounce);if(!composing)debounce=setTimeout(()=>{if(!isFinal()){updateFeedback();renderNav();}},100);}
+function showSummary(){
+ persist();clearTimeout(debounce);screen('summary');
+ const s=counts(),coverage=correctCoverage();
+ el('doneStat').textContent=s.done;el('partialStat').textContent=s.partial;el('emptyStat').textContent=s.empty;
+ el('timeStat').textContent=timeText(duration());el('coverageStat').textContent=coverage+'%';
+ el('summaryCoverageBar').style.width=coverage+'%';
+ el('resume').hidden=isFinal();el('submitFinal').hidden=isFinal();
+ el('resultNotice').className='result-notice'+(isFinal()?' final':'');
+ el('resultNotice').textContent=session.state==='expired'?'時間已到，答案已鎖定。本次結果僅供查看。':session.state==='submitted'?'本次練習已正式結束，答案已鎖定。':'尚未正式交卷。若選擇限時模式，查看進度期間倒數仍會繼續。';
+ el('summaryLead').textContent=isFinal()?'你可以查看每句的答案與進度，但不能再修改本次結果。':'不需要全部完成才可以結束。點擊任何句子，即可返回繼續修改。';
+ const list=el('review');list.replaceChildren();
+ drafts.forEach((_,i)=>{
+  const st=stateAt(i),r=compare(QUESTIONS[i],drafts[i].answer),b=document.createElement('button'),left=document.createElement('span'),right=document.createElement('span'),title=document.createElement('strong'),small=document.createElement('small');
+  title.textContent=`第 ${i+1} 句`;small.textContent=st==='done'?'全部正確':st==='empty'?'尚未輸入':`已正確 ${r.good} / ${r.a.length} 字元`;
+  right.className='tag '+st;right.textContent=st==='done'?'已完成':st==='partial'?'未完成':'未開始';
+  left.append(title,small);b.append(left,right);b.addEventListener('click',()=>go(i));list.append(b);
+ });
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function finishEarly(){
+ if(!session||isFinal())return;
+ if(!confirm('確定結束本次練習並交卷嗎？交卷後不能再修改答案。'))return;
+ session.state='submitted';session.endedAt=Date.now();clearSaved();clearInterval(ticker);showSummary();
+}
+el('start').addEventListener('click',start);
+el('restoreBtn').addEventListener('click',restore);
+el('discardBtn').addEventListener('click',()=>{clearSaved();pendingSession=null;el('restoreBanner').hidden=true;start();});
+el('answer').addEventListener('compositionstart',()=>{composing=true;});
+el('answer').addEventListener('compositionend',()=>{composing=false;persist();schedule();});
+el('answer').addEventListener('input',()=>{persist();schedule();});
+el('prev').addEventListener('click',()=>go(index-1));
+el('next').addEventListener('click',()=>index===7?showSummary():go(index+1));
+el('clear').addEventListener('click',()=>{if(isFinal())return;drafts[index].answer='';el('answer').value='';saveSession();schedule();el('answer').focus();});
+el('summaryTop').addEventListener('click',showSummary);
+el('resume').addEventListener('click',()=>go(index));
+el('submitFinal').addEventListener('click',finishEarly);
+el('restart').addEventListener('click',()=>{if(confirm('確定重新開始嗎？目前輸入的內容會清除。')){clearSaved();start();}});
+['copy','cut','contextmenu','selectstart','dragstart'].forEach(event=>el('target').addEventListener(event,e=>e.preventDefault()));
+window.addEventListener('resize',()=>{if(!el('practice').hidden&&!composing)updateFeedback();});
+window.addEventListener('pagehide',()=>{persist();saveSession();});
+showRestore();
+</script>
+</body>
+</html>
